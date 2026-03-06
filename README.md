@@ -44,49 +44,58 @@ Berikut adalah langkah-langkah untuk menginstal proyek ini di lingkungan lokal A
 
 ---
 
-# Integrasi Supabase di NIKAHFIX
+# Cara Integrasi Supabase di NIKAHFIX (Untuk Pemula)
 
-NIKAHFIX menggunakan **Supabase** untuk mengelola data undangan pernikahan, seperti informasi tamu, pesan, dan acara. Supabase menyediakan layanan **auth**, **database**, dan **storage** untuk membangun aplikasi secara cepat dan efisien.
+NIKAHFIX menggunakan **Supabase** untuk menyimpan data ucapan/pesan undangan. Tenang saja, pengaturan Supabase ini sangat mudah dan tidak memerlukan kemampuan memprogram. Di bawah ini adalah langkah-langkah simpelnya:
 
-## Langkah-langkah Integrasi Supabase
+## Langkah 1: Buat Proyek Supabase
 
-### 1. Mendaftar ke Supabase
+1. Kunjungi [Supabase.com](https://supabase.io) dan daftar/login.
+2. Klik tombol **"New Project"**.
+3. Pilih Organisasi dan beri nama proyek Anda (misalnya: `Undangan Nikah Ku`).
+4. Buat **Database Password** (simpan baik-baik atau gunakan tombol _Generate a password_).
+5. Pilih Region (disarankan "Singapore" agar lebih cepat).
+6. Klik **"Create New Project"** dan tunggu beberapa menit hingga proyek siap (Status _Provisioning_ selesai).
 
-- Kunjungi [Supabase](https://supabase.io) dan buat akun, kemudian buat proyek baru.
-- Setelah proyek dibuat, Anda akan mendapatkan URL dan **anon key** untuk mengakses Supabase.
+## Langkah 2: Buat Tabel Supabase Otomatis
 
-### 2. Menambahkan Variabel Lingkungan (Environment Variables)
+Kita perlu membuat tempat menyimpan pesan tamu (namanya 'Table'). Kami sudah menyiapkan script otomatis agar Anda tidak perlu membuatnya secara manual.
 
-Untuk menyimpan kredensial Supabase, buat file `.env` di root proyek dan tambahkan variabel berikut:
+1. Di Dashboard Supabase proyek Anda, lihat menu di sebelah kiri dan pilih **"SQL Editor"** (ikon `< >`).
+2. Klik tombol **"New Query"**.
+3. Buka file `setup_supabase.sql` yang ada di folder proyek ini. Copy seluruh isi teks dalam file tersebut.
+4. Paste (tempel) teks tersebut ke layar "SQL Editor" di Supabase.
+5. Klik tombol hijau **"Run"** (atau tekan `Ctrl` + `Enter`).
+6. Jika di bawah layar muncul pesan "Success", berarti tabel Anda sudah selesai dibuat dengan aman!
 
+_(Catatan: Langkah ini membuat tabel bernama `nikahfix` dan mengatur izin keamanan agar semua tamu bisa mengisi & membaca pesan)._
+
+## Langkah 3: Sambungkan NIKAHFIX dengan Supabase
+
+Sekarang saatnya menghubungkan website NIKAHFIX dengan Supabase.
+
+1. Di Dashboard Supabase Anda, masuk ke menu **"Project Settings"** (ikon roda gigi di kiri bawah).
+2. Pilih menu **"API"**.
+3. Di dalam proyek NIKAHFIX Anda, cari file bernama `.env.example`, lalu ubah namanya menjadi **`.env`** (atau buat file baru bernana `.env`).
+4. Buka file `.env` tersebut dan isi sesuai dengan data dari Supabase Anda:
+
+```env
+VITE_APP_SUPABASE_URL=Masukkan "Project URL" dari halaman API Supabase Anda
+VITE_APP_SUPABASE_ANON_KEY=Masukkan "anon" / "public" key dari halaman API Supabase Anda
+VITE_APP_TABLE_NAME=nikahfix
 ```
-VITE_APP_SUPABASE_ANON_KEY=your-anon-key
-VITE_APP_SUPABASE_URL=https://your-project-url.supabase.co
-VITE_APP_TABLE_NAME=your-table-name
-```
 
-Gantilah `your-anon-key`, `your-project-url.supabase.co`, dan `your-table-name` sesuai dengan kredensial proyek Supabase Anda.
-
-### 3. Menginstal Supabase Client
-
-Pasang dependensi Supabase untuk React:
-
-```bash
-npm install @supabase/supabase-js
-```
+**Selesai!** Sekarang NIKAHFIX sudah siap digunakan dan bisa menerima ucapan dari tamu Anda.
 
 ## Struktur Proyek
 
 Berikut adalah struktur direktori proyek yang telah terintegrasi dengan Supabase:
 
 - `src/` - Berisi komponen utama, logika aplikasi, dan konfigurasi Supabase.
-  - `supabaseClient.js` - File konfigurasi Supabase.
-  - `App.js` - Komponen utama aplikasi.
+  - `supabaseClient.js` - File konfigurasi Supabase (sudah disingkronisasi dengan `.env`).
+  - `App.jsx` - Komponen utama aplikasi.
 - `public/` - Berisi aset-aset statis, seperti gambar dan ikon.
 - `.env` - Berisi variabel lingkungan untuk kredensial Supabase.
-
-## Kesimpulan
-
-Dengan mengintegrasikan Supabase, Anda dapat dengan mudah mengelola data undangan pernikahan seperti tamu, pesan, dan acara menggunakan Supabase sebagai backend. Anda juga dapat memanfaatkan fitur autentikasi Supabase untuk memungkinkan tamu RSVP atau mengakses halaman pribadi.
+- `setup_supabase.sql` - Script otomatis untuk mempermudah pengaturan database Anda.
 
 ---
